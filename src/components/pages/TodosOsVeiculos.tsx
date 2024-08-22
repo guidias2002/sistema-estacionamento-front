@@ -4,5 +4,5 @@ import { TableComponent } from '../table/TableComponent';
 export function TodosOsVeiculos() {
     const { data } = useVeiculoData();
 
-    return <TableComponent data={data} />;
+    return <TableComponent data={data} showValorPeriodo={true} />;
 }

@@ -1,5 +1,5 @@
 export enum TipoVeiculo {
-    Carro = "CARRO",
-    MOTO = "Moto",
+    CARRO = "CARRO",
+    MOTO = "MOTO",
 }
     

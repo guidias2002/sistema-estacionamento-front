@@ -5,5 +5,5 @@ export function VeiculosEstacionados() {
     const { data } = useVeiculoData();
     const veiculosEstacionados = data?.filter(veiculo => !veiculo.saida);
 
-    return <TableComponent data={veiculosEstacionados} />;
+    return <TableComponent data={veiculosEstacionados} showValorPeriodo={false} />;
 }

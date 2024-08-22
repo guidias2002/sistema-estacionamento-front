@@ -8,27 +8,28 @@ import Paper from '@mui/material/Paper';
 import { Row } from '../row/row';
 import { VeiculoData } from '../../interface/VeiculoData';
 
-import './tableComponent.css'
+import '../table/tableComponent.css'
 
 interface TableComponentProps {
   data: VeiculoData[] | undefined;
+  showValorPeriodo: boolean;
 }
 
-export function TableComponent({ data }: TableComponentProps) {
+export function TableComponent({ data, showValorPeriodo }: TableComponentProps) {
   
     return (
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650, width: '80%', margin: 'auto',  }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell className='boldTableCell'>Tipo Veículo</TableCell>
-              <TableCell className='boldTableCell'>Placa</TableCell>
-              <TableCell className='boldTableCell'>Modelo</TableCell>
-              <TableCell className='boldTableCell'>Cor</TableCell>
-              <TableCell className='boldTableCell'>Entrada</TableCell>
-              <TableCell className='boldTableCell'>Saída</TableCell>
-              <TableCell className='boldTableCell'>Valor</TableCell>
-              <TableCell className='boldTableCell'>Período em Minutos</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Tipo Veículo</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Placa</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Modelo</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Cor</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Entrada</TableCell>
+              <TableCell sx={{ fontWeight: 'bold' }}>Saída</TableCell>
+              {showValorPeriodo && <TableCell sx={{ fontWeight: 'bold' }}>Valor</TableCell>}
+              {showValorPeriodo && <TableCell sx={{ fontWeight: 'bold' }}>Período em Minutos</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -40,8 +41,8 @@ export function TableComponent({ data }: TableComponentProps) {
                     cor={veiculoData.cor}
                     entrada={veiculoData.entrada}
                     saida={veiculoData.saida}
-                    valor={veiculoData.valor}
-                    periodoEmMinutos={veiculoData.periodoEmMinutos}
+                    valor={showValorPeriodo ? veiculoData.valor : undefined}
+                    periodoEmMinutos={showValorPeriodo ? veiculoData.periodoEmMinutos : undefined}
                 />
             )}
           </TableBody>
