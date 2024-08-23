@@ -1,9 +1,8 @@
-import { useVeiculoData } from '../../hooks/useVeiculoData';
+import { useVeiculosEstacionadosData } from '../../hooks/useVeiculosEstacionadosData';
 import { TableComponent } from '../table/TableComponent';
 
 export function VeiculosEstacionados() {
-    const { data } = useVeiculoData();
-    const veiculosEstacionados = data?.filter(veiculo => !veiculo.saida);
+    const { data } = useVeiculosEstacionadosData();
 
-    return <TableComponent data={veiculosEstacionados} showValorPeriodo={false} />;
+    return <TableComponent data={data} showValorPeriodo={false} />;
 }

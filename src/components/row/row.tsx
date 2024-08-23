@@ -1,30 +1,22 @@
+// src/components/row.tsx
+import { useState } from 'react';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import { TipoVeiculo } from '../../enum/TipoVeiculo';
 import { Box, Button, Modal, TextField } from '@mui/material';
-import { useState } from 'react';
 import axios from 'axios';
+import { NotificationCard } from '../NotificationCard'; 
 
-interface RowProps {
-    tipoVeiculo: TipoVeiculo;
-    placa: string;
-    modelo: string;
-    cor: string;
-    entrada: string;
-    saida: string;
-    valor?: string;
-    periodoEmMinutos?: number;
-}
-    
-
-export function Row(props : RowProps){
-
+export function Row(props) {
     const [isModalOpen, setModalOpen] = useState(false);
     const [inputPlaca, setInputPlaca] = useState('');
 
-    const formatTimestamp = (timestamp: string | null) => {
+    const [notificationOpen, setNotificationOpen] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
+    const [notificationType, setNotificationType] = useState('success'); 
+
+    const formatTimestamp = (timestamp) => {
         if (!timestamp) {
-            return ""; 
+            return "";
         }
         const date = new Date(timestamp);
         return date.toLocaleString();
@@ -32,8 +24,9 @@ export function Row(props : RowProps){
 
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
+    const handleCloseNotification = () => setNotificationOpen(false);
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event) => {
         setInputPlaca(event.target.value);
     };
 
@@ -41,25 +34,34 @@ export function Row(props : RowProps){
         if (inputPlaca === props.placa) {
             try {
                 await axios.post(`http://localhost:8080/veiculos/saida/${props.placa}`);
-                alert('Saída registrada com sucesso!');
+                
+                // Mostrar a notificação
+                setNotificationMessage('Saída registrada com sucesso!');
+                setNotificationType('success');
+                setNotificationOpen(true);
+                
                 handleCloseModal();
             } catch (error) {
-                alert('Erro ao registrar saída. Tente novamente.');
+                setNotificationMessage('Erro ao registrar saída. Tente novamente.');
+                setNotificationType('error');
+                setNotificationOpen(true);
             }
         } else {
-            alert('A placa inserida não corresponde à placa do veículo.');
+            setNotificationMessage('A placa inserida não corresponde à placa do veículo.');
+            setNotificationType('error');
+            setNotificationOpen(true);
         }
     };
 
-    return(
+    return (
         <TableRow>
-        <TableCell>{props.tipoVeiculo}</TableCell>
-        <TableCell>{props.placa}</TableCell>
-        <TableCell>{props.modelo}</TableCell>
-        <TableCell>{props.cor}</TableCell>
-        <TableCell>{formatTimestamp(props.entrada)}</TableCell>
-        <TableCell>
-                {props.saida || (
+            <TableCell>{props.tipoVeiculo}</TableCell>
+            <TableCell>{props.placa}</TableCell>
+            <TableCell>{props.modelo}</TableCell>
+            <TableCell>{props.cor}</TableCell>
+            <TableCell>{formatTimestamp(props.entrada)}</TableCell>
+            <TableCell>
+                {props.saida ? formatTimestamp(props.saida) : (
                     <>
                         <Button variant="contained" color="primary" onClick={handleOpenModal}>
                             Registrar Saída
@@ -105,8 +107,15 @@ export function Row(props : RowProps){
                     </>
                 )}
             </TableCell>
-        <TableCell>{props.valor}</TableCell>
-        <TableCell>{props.periodoEmMinutos}</TableCell>
+            <TableCell>{props.valor}</TableCell>
+            <TableCell>{props.periodoEmMinutos}</TableCell>
+
+            <NotificationCard
+                open={notificationOpen}
+                onClose={handleCloseNotification}
+                message={notificationMessage}
+                type={notificationType}
+            />
         </TableRow>
     );
 }

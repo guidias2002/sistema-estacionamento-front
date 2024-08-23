@@ -8,7 +8,6 @@ import Paper from '@mui/material/Paper';
 import { Row } from '../row/row';
 import { VeiculoData } from '../../interface/VeiculoData';
 
-import '../table/tableComponent.css'
 
 interface TableComponentProps {
   data: VeiculoData[] | undefined;

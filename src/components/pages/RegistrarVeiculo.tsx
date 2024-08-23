@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+// src/pages/registrarVeiculo.tsx
+import { useState } from 'react';
 import { Box, Button, Modal, TextField, MenuItem } from '@mui/material';
 import axios from 'axios';
 import { TipoVeiculo } from '../../enum/TipoVeiculo';
+import { validarVeiculo } from '../../validarVeiculo';
+import { NotificationCard } from '../NotificationCard'; 
 
 export function RegistrarVeiculo() {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -10,21 +13,53 @@ export function RegistrarVeiculo() {
     const [modelo, setModelo] = useState('');
     const [cor, setCor] = useState('');
 
+    const [errors, setErrors] = useState({
+        tipoVeiculo: '',
+        placa: '',
+        modelo: '',
+        cor: ''
+    });
+
+    const [notificationOpen, setNotificationOpen] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
+    const [notificationType, setNotificationType] = useState('success'); // 'success' or 'error'
+
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
+    const handleCloseNotification = () => setNotificationOpen(false);
 
     const handleRegistrarVeiculo = async () => {
-        try {
-            await axios.post('http://localhost:8080/veiculos', {
-                tipoveiculo: tipoVeiculo,
-                placa,
-                modelo,
-                cor
-            });
-            alert('Veículo registrado com sucesso!');
-            handleCloseModal();
-        } catch (error) {
-            alert('Erro ao registrar veículo. Tente novamente.');
+        const { formIsValid, errors } = validarVeiculo(tipoVeiculo, placa, modelo, cor);
+
+        if (formIsValid) {
+            try {
+                await axios.post('http://localhost:8080/veiculos', {
+                    tipoveiculo: tipoVeiculo,
+                    placa,
+                    modelo,
+                    cor
+                });
+                
+                // Mostrar a notificação
+                setNotificationMessage('Cadastro realizado com sucesso!');
+                setNotificationType('success');
+                setNotificationOpen(true);
+                
+                // Resetando os campos após o sucesso do registro
+                setTipoVeiculo('');
+                setPlaca('');
+                setModelo('');
+                setCor('');
+                setErrors({ tipoVeiculo: '', placa: '', modelo: '', cor: '' });
+
+                handleCloseModal();
+            } catch (error) {
+                setNotificationMessage('Erro ao registrar veículo. Tente novamente.');
+                setNotificationType('error');
+                setNotificationOpen(true);
+            }
+        } else {
+            setErrors(errors);
         }
     };
 
@@ -68,6 +103,8 @@ export function RegistrarVeiculo() {
                             value={tipoVeiculo}
                             onChange={(e) => setTipoVeiculo(e.target.value)}
                             fullWidth
+                            error={Boolean(errors.tipoVeiculo)}
+                            helperText={errors.tipoVeiculo}
                         >
                             {Object.keys(TipoVeiculo).map((key) => (
                                 <MenuItem key={key} value={key}>
@@ -75,27 +112,37 @@ export function RegistrarVeiculo() {
                                 </MenuItem>
                             ))}
                         </TextField>
+
                         <TextField
                             label="Placa"
                             variant="outlined"
                             value={placa}
-                            onChange={(e) => setPlaca(e.target.value)}
+                            onChange={(e) => setPlaca(e.target.value.toUpperCase())} // converte para maiúsculo automaticamente
                             fullWidth
+                            error={Boolean(errors.placa)}
+                            helperText={errors.placa}
                         />
+
                         <TextField
                             label="Modelo"
                             variant="outlined"
                             value={modelo}
                             onChange={(e) => setModelo(e.target.value)}
                             fullWidth
+                            error={Boolean(errors.modelo)}
+                            helperText={errors.modelo}
                         />
+
                         <TextField
                             label="Cor"
                             variant="outlined"
                             value={cor}
                             onChange={(e) => setCor(e.target.value)}
                             fullWidth
+                            error={Boolean(errors.cor)}
+                            helperText={errors.cor}
                         />
+
                         <Button
                             variant="contained"
                             color="primary"
@@ -106,6 +153,13 @@ export function RegistrarVeiculo() {
                     </Box>
                 </Box>
             </Modal>
+
+            <NotificationCard
+                open={notificationOpen}
+                onClose={handleCloseNotification}
+                message={notificationMessage}
+                type={notificationType}
+            />
         </>
     );
 }

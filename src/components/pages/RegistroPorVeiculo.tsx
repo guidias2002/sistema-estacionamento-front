@@ -1,52 +1,25 @@
-import { useState } from 'react';
-import { TextField, Button, Typography, Box } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 import { useVeiculoData } from '../../hooks/useVeiculoData';
 import { TableComponent } from '../table/TableComponent';
+import { Typography } from '@mui/material';
 
-export function RegistroPorVeiculo() {
-    const [inputPlaca, setInputPlaca] = useState('');
-    const [placa, setPlaca] = useState('');
+export function BuscarVeiculo() {
+    const { search } = useLocation();
+    const params = new URLSearchParams(search);
+    const placa = params.get('placa') || '';
     const { data } = useVeiculoData();
 
-    const veiculoFiltrado = placa ? data?.filter(veiculo => veiculo.placa === placa) : [];
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputPlaca(e.target.value);
-    };
-
-    const handleSearch = () => {
-        setPlaca(inputPlaca);
-    };
+    const veiculoFiltrado = data?.filter(veiculo => veiculo.placa === placa);
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-                width: '80%',
-                margin: '0 auto',
-                gap: 2,
-            }}
-        >
-            <TextField 
-                label="Placa do Veículo" 
-                value={inputPlaca} 
-                onChange={handleChange} 
-                sx={{ flexGrow: 1 }}
-            />
-            <Button 
-                variant="contained" 
-                onClick={handleSearch}
-                sx={{ height: '100%' }}
-            >
-                Buscar
-            </Button>
-            {veiculoFiltrado.length > 0 ? (
-                <TableComponent data={veiculoFiltrado} />
+        <div style={{ width: '80%', margin: 'auto' }}>
+            {veiculoFiltrado && veiculoFiltrado.length > 0 ? (
+                <TableComponent data={veiculoFiltrado} showValorPeriodo={false} />
             ) : (
-                placa && <Typography variant="body1">Nenhum veículo encontrado para a placa informada.</Typography>
+                <Typography variant="body1">
+                    Nenhum veículo encontrado para a placa: {placa}.
+                </Typography>
             )}
-        </Box>
+        </div>
     );
 }
