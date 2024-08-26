@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css'
 import { Menu } from './components/menu/Menu';
 import { TodosOsVeiculos } from './components/pages/TodosOsVeiculos';
@@ -11,6 +11,7 @@ function App() {
     <Router>
             <Menu />
             <Routes>
+                <Route path="/" element={<Navigate to="/veiculos-estacionados" />} />
                 <Route path="/todos-os-veiculos" element={<TodosOsVeiculos />} />
                 <Route path="/veiculos-estacionados" element={<VeiculosEstacionados />} />
                 <Route path="/buscar" element={<BuscarVeiculo />} />

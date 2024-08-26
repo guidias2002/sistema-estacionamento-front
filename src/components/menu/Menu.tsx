@@ -15,7 +15,7 @@ export function Menu() {
 
     return (
         <>
-            <AppBar className='appBar' position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: 'none', borderBottom: '1px solid #ccc', border: "none" }}>
+            <AppBar className='appBar' position="static" sx={{ backgroundColor: 'white', color: 'black', boxShadow: 'none', borderBottom: '1px solid #ccc', border: "none", padding: '10px 0px' }}>
                 <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '80%', margin: 'auto' }}>
                     <Box sx={{ display: 'flex', gap: 2 }}>
                         <Button 

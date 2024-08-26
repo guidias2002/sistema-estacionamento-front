@@ -5,6 +5,8 @@ import axios from 'axios';
 import { TipoVeiculo } from '../../enum/TipoVeiculo';
 import { validarVeiculo } from '../../validarVeiculo';
 import { NotificationCard } from '../NotificationCard'; 
+import { useQueryClient } from "@tanstack/react-query";
+
 
 export function RegistrarVeiculo() {
     const [isModalOpen, setModalOpen] = useState(false);
@@ -20,6 +22,7 @@ export function RegistrarVeiculo() {
         cor: ''
     });
 
+
     const [notificationOpen, setNotificationOpen] = useState(false);
     const [notificationMessage, setNotificationMessage] = useState('');
     const [notificationType, setNotificationType] = useState('success'); // 'success' or 'error'
@@ -27,6 +30,8 @@ export function RegistrarVeiculo() {
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
     const handleCloseNotification = () => setNotificationOpen(false);
+    
+    const queryClient = useQueryClient();
 
     const handleRegistrarVeiculo = async () => {
         const { formIsValid, errors } = validarVeiculo(tipoVeiculo, placa, modelo, cor);
@@ -52,9 +57,12 @@ export function RegistrarVeiculo() {
                 setCor('');
                 setErrors({ tipoVeiculo: '', placa: '', modelo: '', cor: '' });
 
+                queryClient.invalidateQueries({ queryKey: ["veiculo-data"] });
+
+
                 handleCloseModal();
             } catch (error) {
-                setNotificationMessage('Erro ao registrar veículo. Tente novamente.');
+                setNotificationMessage('Veículo com esta placa já estacionado.');
                 setNotificationType('error');
                 setNotificationOpen(true);
             }
