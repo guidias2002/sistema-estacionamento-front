@@ -1,50 +1,49 @@
-# React + TypeScript + Vite
+# Sistema de Estacionamento - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este documento descreve as telas do sistema de estacionamento, incluindo as funcionalidades e a interface do usuário.
 
-Currently, two official plugins are available:
+## Telas do Sistema
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Tela: Veículos Estacionados
 
-## Expanding the ESLint configuration
+A tela **Veículos Estacionados** exibe a lista de veículos que ainda estão estacionados. Cada linha da tabela contém as seguintes informações:
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Tipo de Veículo**: O tipo do veículo (e.g., Carro, Moto).
+- **Placa**: A placa do veículo.
+- **Modelo**: O modelo do veículo.
+- **Cor**: A cor do veículo.
+- **Entrada**: O horário de entrada do veículo.
+- **Saída**: Um botão "Registrar Saída" que, ao ser clicado, abre um modal para confirmar a saída do veículo.
 
-- Configure the top-level `parserOptions` property like this:
+#### Funcionalidades:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Buscar pela Placa**: Campo de busca que permite filtrar os veículos pela placa.
+- **Botão de Exportação**: Localizado ao lado direito da tabela, o botão representado por três pontos (...) permite a exportação dos dados em dois formatos:
+  - Exportar em `.xlsx`
+  - Exportar em `JSON`
+- **Registrar Saída**: Ao clicar no botão "Registrar Saída", um modal é exibido solicitando a confirmação da placa. Se a placa for confirmada, a saída é registrada e o veículo é removido da lista.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Tela: Todos os Veículos
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+A tela **Todos os Veículos** exibe a lista completa de veículos, tanto os estacionados quanto os que já registraram saída. A tabela nesta tela contém as seguintes colunas:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- **Tipo de Veículo**: O tipo do veículo (e.g., Carro, Moto).
+- **Placa**: A placa do veículo.
+- **Modelo**: O modelo do veículo.
+- **Cor**: A cor do veículo.
+- **Entrada**: O horário de entrada do veículo.
+- **Saída**: O horário de saída, se registrado.
+- **Valor**: O valor cobrado pelo estacionamento, calculado com base no período de permanência.
+- **Período em Minutos**: O total de minutos que o veículo permaneceu estacionado.
+
+#### Funcionalidades:
+
+- **Buscar pela Placa**: Campo de busca para filtrar os veículos pela placa.
+- **Botão de Exportação**: Similar à tela de "Veículos Estacionados", permite a exportação dos dados em `.xlsx` ou `JSON`.
+
+## Como Executar
+
+1. Clone o repositório.
+2. Instale as dependências utilizando `npm install`.
+3. Inicie o servidor com `npm start`.
+4. Acesse o frontend em [http://localhost:3000](http://localhost:3000).
